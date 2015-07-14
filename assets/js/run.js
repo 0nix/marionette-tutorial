@@ -4,7 +4,14 @@ app.StaticView = Marionette.ItemView.extend({
 	template:"#static-template",
 });
 app.ContactView = Marionette.ItemView.extend({
-	template:"#contact-template"
+	template:"#contact-template",
+	events:{
+		"click p":"alertPhone"
+	},
+	alertPhone:function(){
+		var pn = this.model.escape("phoneNumber"); 
+		alert((!pn) ? "No Phone Number!" : pn);
+	}
 });
 app.RegionContainer = Marionette.LayoutView.extend({
 	el:"#app-container",
@@ -12,7 +19,13 @@ app.RegionContainer = Marionette.LayoutView.extend({
 		main: "#main-region"
 	}
 });
-app.Contact = Backbone.Model.extend({});
+app.Contact = Backbone.Model.extend({
+	defaults:{
+		firstName:"",
+		lastName:"",
+		phoneNumber:""
+	}
+});
 
 app.on("before:start",function(){
 	app.regions = new app.RegionContainer();
