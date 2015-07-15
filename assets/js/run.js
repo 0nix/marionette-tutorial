@@ -59,22 +59,7 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 		}
 	}
 });
-// VIEW DEFINITION
-app.StaticView = Marionette.ItemView.extend({
-	//el:"#main-region",
-	template:"#static-template",
-});
-app.ContactView = Marionette.ItemView.extend({
-	template:"#contact-template",
-	events:{
-		"click p":"alertPhone"
-	},
-	alertPhone:function(){
-		var pn = this.model.escape("phoneNumber"); 
-		alert((!pn) ? "No Phone Number!" : pn);
-	}
-});
-// CONTAINERS
+//CONTAINERS
 app.RegionContainer = Marionette.LayoutView.extend({
 	el:"#app-container",
 	regions:{
@@ -86,42 +71,6 @@ app.on("before:start",function(){
 	app.regions = new app.RegionContainer();
 });
 app.on("start",function () {
-	/*var view = new app.StaticView({
-		template:"#dynamic-template",
-		tagName: "span"
-	});
-	view.render()*/
-	/*var view = new app.StaticView();
-	app.regions.main.show(view);*/
-	/*var a = new app.Contact({
-		firstName: "Fuck",
-		lastName: "McDickface",
-		phoneNumber: "fuckyou"
-	});
-	var aView = new app.ContactView({model: a});
-	app.regions.main.show(aView);*/
-	/*var con = new app.Entities.ContactCollection([
-		{
-			firstName: "Alexys",
-			lastName: "Hegmann",
-			phoneNumber: "+52123812390123"
-		},
-		{
-			firstName: "Lisandro",
-			lastName: "Zvijer",
-			phoneNumber: "+5212312312321"
-
-		},
-		{
-			firstName: "Marco Antonio",
-			lastName: "Solis",
-			phoneNumber: "+52898923482233"			
-		}]);*/
-	/*var con = app.Entities.bridge.request("contact:entities");
-	var listView = new app.App.List.ContactsView({
-		collection: con
-	});
-	app.regions.main.show(listView);*/
 	app.App.List.Controller.listContacts();
 });
 app.start();
