@@ -37,18 +37,32 @@ app.module("Entities",function(Entities, app, Backbone, Marionette, $, _){
 app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 	List.ContactItemView = Marionette.ItemView.extend({
 		template:"#contact-list-item",
-		tagName:"li",
+		tagName:"tr",
 		events:{
-			"click p":"alertPhone"
+			"click td":"alertName"
 		},
 		alertPhone:function(){
 			var pn = this.model.escape("phoneNumber"); 
 			alert((!pn) ? "No Phone Number!" : pn);
+		},
+		highlight:function(){
+			this.$el.toggleClass("warning");
+		},
+		alertName:function(){
+			alert(this.$el[0].innerText);
 		}
 	});
-	List.ContactsView = Marionette.CollectionView.extend({
-		tagName: "ul",
+	/*List.ContactsView = Marionette.CollectionView.extend({
+		tagName: "table",
+		className: "table table-hover",
 		childView: List.ContactItemView
+	});*/
+	List.ContactsView = Marionette.CompositeView.extend({
+		tagName:"table",
+		className:"table table-hover",
+		template:"#contact-list",
+		childView: List.ContactItemView,
+		childViewContainer:"tbody"
 	});
 	List.Controller = {
 		listContacts: function(){
