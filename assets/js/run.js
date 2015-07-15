@@ -39,7 +39,13 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 		template:"#contact-list-item",
 		tagName:"tr",
 		events:{
-			"click td":"alertName"
+			"click td":"highlight",
+			"click .el-deleto": "deletion"
+		},
+		deletion: function(ev){
+				ev.stopPropagation();
+				//this.$el.fadeOut(2000);
+				this.trigger("contact:delete",this.model);
 		},
 		alertPhone:function(){
 			var pn = this.model.escape("phoneNumber"); 
@@ -47,6 +53,7 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 		},
 		highlight:function(){
 			this.$el.toggleClass("warning");
+			this.trigger("contact:clicky",this.model.attributes);
 		},
 		alertName:function(){
 			alert(this.$el[0].innerText);
@@ -66,10 +73,17 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 	});
 	List.Controller = {
 		listContacts: function(){
-			var data = 
-			app.regions.main.show(new List.ContactsView({
+			var lcv = new List.ContactsView({
 				collection: app.Entities.bridge.request("contact:entities")
-			}));
+			})
+			lcv.on("childview:contact:clicky",function(cview, model){
+				console.log(model);
+			});
+			lcv.on("childview:contact:delete", function(cview, model){
+				model.collection.remove(model);
+			});
+			app.regions.main.show(lcv);
+
 		}
 	}
 });
