@@ -112,7 +112,27 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 		}
 	}
 });
-
+app.module("App",function(App, app, Backbone, Marionette, $, _){
+	App.Router = Marionette.AppRouter.extend({
+		appRoutes:{
+			"contacts":"listContacts"
+		}
+	});
+	var API = {
+		listContacts: function(){ 
+			app.App.List.Controller.listContacts();
+		}
+	};
+	App.on("contacts:list",function(){
+		app.navigate("contacts");
+		API.listContacts();
+	});
+	App.on("start",function(){ 
+		new App.Router({
+			controller: API
+		});
+	});
+});
 //CONTAINERS
 app.RegionContainer = Marionette.LayoutView.extend({
 	el:"#app-container",
@@ -120,11 +140,22 @@ app.RegionContainer = Marionette.LayoutView.extend({
 		main: "#main-region"
 	}
 });
+//NAVIGATION SETUP
+app.navigate = function(route, options){
+	Backbone.history.navigate(route, options || {});
+}
+app.getRoute = function(){
+	return Backbone.history.fragment;
+}
 // EVENT LISTENERS
 app.on("before:start",function(){
 	app.regions = new app.RegionContainer();
 });
 app.on("start",function () {
-	app.App.List.Controller.listContacts();
+	if(Backbone.history) Backbone.history.start();
+	if(app.getRoute() === ""){
+		this.navigate("contacts");
+		app.trigger("contacts:list");
+	}
 });
 app.start();
