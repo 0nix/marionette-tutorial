@@ -27,6 +27,7 @@ app.ContactView = Marionette.ItemView.extend({
 });
 app.ContactItemView = Marionette.ItemView.extend({
 	template:"#contact-list-item",
+	tagName:"li",
 	events:{
 		"click p":"alertPhone"
 	},
