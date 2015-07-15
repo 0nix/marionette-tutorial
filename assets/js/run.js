@@ -34,18 +34,40 @@ app.module("Entities",function(Entities, app, Backbone, Marionette, $, _){
 	Entities.bridge = new Backbone.Wreqr.RequestResponse();
 	Entities.bridge.setHandler("contact:entities", API.getContactEntities);
 });
+app.module("App.Show",function(Show, app, Backbone, Marionette, $, _){
+	Show.Contact = Marionette.ItemView.extend({
+		template: "#contact-view"
+	});
+	Show.Controller = {
+		showContact: function(m){
+			var contactView = new Show.Contact({
+				model: m
+			});
+			app.regions.main.show(contactView);
+		}
+	};
+	
+});
 app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 	List.ContactItemView = Marionette.ItemView.extend({
 		template:"#contact-list-item",
 		tagName:"tr",
 		events:{
-			"click td":"highlight",
-			"click .el-deleto": "deletion"
+			//"click td":"highlight",
+			"click .el-deleto": "deletion",
+			"click .el-show":"showesion"
+		},
+		showesion:function(ev){
+			ev.preventDefault();
+			ev.stopPropagation();
+			this.trigger("contact:show", this.model);
+
 		},
 		deletion: function(ev){
-				ev.stopPropagation();
-				//this.$el.fadeOut(2000);
-				this.trigger("contact:delete",this.model);
+			ev.preventDefault();
+			ev.stopPropagation();
+			//this.$el.fadeOut(2000);
+			this.trigger("contact:delete",this.model);
 		},
 		alertPhone:function(){
 			var pn = this.model.escape("phoneNumber"); 
@@ -76,6 +98,9 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 			var lcv = new List.ContactsView({
 				collection: app.Entities.bridge.request("contact:entities")
 			})
+			lcv.on("childview:contact:show",function(cview, model){
+				app.App.Show.Controller.showContact(model);
+			});
 			lcv.on("childview:contact:clicky",function(cview, model){
 				console.log(model);
 			});
@@ -87,6 +112,7 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 		}
 	}
 });
+
 //CONTAINERS
 app.RegionContainer = Marionette.LayoutView.extend({
 	el:"#app-container",

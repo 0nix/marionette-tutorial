@@ -36,13 +36,30 @@
     <tbody>
     </tbody>
   </script>
-  <script type="text/template" id="contact-list-item">
-    <td><%- firstName %></td> <td><%- lastName %></td>
+  <script type="text/template" id="contact-view">
+    <h1><%- firstName %> <%- lastName %></h1>
+    <p><strong>Phone number:</strong> <%- phoneNumber %></p>
+  </script>
+  <!--<script type="text/template" id="contact-list-item">
+    <td><%- firstName %></td> 
+    <td><%- lastName %></td>
     <td>
       <button class="btn btn-small el-deleto">
       <i class="icon-remove"></i>
       Delete
       </button>
+    </td>
+  </script>-->
+  <script type="text/template" id="contact-list-item">
+    <td><%- firstName %></td> 
+    <td><%- lastName %></td>
+    <td>
+      <a href="#" class="btn btn-small el-show">
+      <i class="icon-eye-open"></i> Show
+      </a>
+      <a href="#" class="btn btn-small el-deleto">
+      <i class="icon-remove"></i> Delete
+      </a>
     </td>
   </script>
     <script src="./assets/js/vendor/jquery.js"></script>
