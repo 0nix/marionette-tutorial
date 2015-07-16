@@ -39,7 +39,9 @@ app.module("App.Show",function(Show, app, Backbone, Marionette, $, _){
 		template: "#contact-view"
 	});
 	Show.Controller = {
-		showContact: function(m){
+		showContact: function(id){
+			var contacts = app.Entities.bridge.request("contact:entities");
+			var m = contacts.get(id);
 			var contactView = new Show.Contact({
 				model: m
 			});
@@ -99,7 +101,9 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 				collection: app.Entities.bridge.request("contact:entities")
 			})
 			lcv.on("childview:contact:show",function(cview, model){
-				app.App.Show.Controller.showContact(model);
+				//app.navigate("contacts/"+model.get("id"));
+				//app.App.Show.Controller.showContact(model);
+				app.App.trigger("contacts:show", model.get("id"));
 			});
 			lcv.on("childview:contact:clicky",function(cview, model){
 				console.log(model);
@@ -115,15 +119,27 @@ app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 app.module("App",function(App, app, Backbone, Marionette, $, _){
 	App.Router = Marionette.AppRouter.extend({
 		appRoutes:{
-			"contacts":"listContacts"
+			"contacts":"listContacts",
+			"contacts/:id":"showContact"
 		}
 	});
 	var API = {
 		listContacts: function(){ 
 			app.App.List.Controller.listContacts();
+		},
+		showContact:function(id){
+			app.App.Show.Controller.showContact(id);
 		}
 	};
+	App.on("contacts:test",function(){
+		console.log("GHOMBO");
+	});
+	App.on("contacts:show",function(id){
+		app.navigate("contacts/"+id);
+		API.showContact(id);
+	});
 	App.on("contacts:list",function(){
+		console.log("jk");
 		app.navigate("contacts");
 		API.listContacts();
 	});
