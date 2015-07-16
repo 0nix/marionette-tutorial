@@ -39,6 +39,10 @@
   <script type="text/template" id="contact-view">
     <h1><%- firstName %> <%- lastName %></h1>
     <p><strong>Phone number:</strong> <%- phoneNumber %></p>
+    <a href="#contacts">&#8617; Back to Contact List</a>
+  </script>
+  <script type="text/template" id="missing-contact-view">
+    <div class="alert alert-error">This contact does not exist.</div>
   </script>
   <!--<script type="text/template" id="contact-list-item">
     <td><%- firstName %></td> 

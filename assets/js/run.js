@@ -35,6 +35,9 @@ app.module("Entities",function(Entities, app, Backbone, Marionette, $, _){
 	Entities.bridge.setHandler("contact:entities", API.getContactEntities);
 });
 app.module("App.Show",function(Show, app, Backbone, Marionette, $, _){
+	Show.MissingContact = Marionette.ItemView.extend({
+		template:"#missing-contact-view"
+	});
 	Show.Contact = Marionette.ItemView.extend({
 		template: "#contact-view"
 	});
@@ -42,13 +45,12 @@ app.module("App.Show",function(Show, app, Backbone, Marionette, $, _){
 		showContact: function(id){
 			var contacts = app.Entities.bridge.request("contact:entities");
 			var m = contacts.get(id);
-			var contactView = new Show.Contact({
-				model: m
-			});
+			var contactView;
+			if(!m) contactView = new Show.MissingContact();
+			else contactView = new Show.Contact({ model: m });
 			app.regions.main.show(contactView);
 		}
 	};
-	
 });
 app.module("App.List",function(List, app, Backbone, Marionette, $, _){
 	List.ContactItemView = Marionette.ItemView.extend({
