@@ -2,6 +2,7 @@ var app = new Marionette.Application();
 //MODULES
 app.module("Entities",function(Entities, app, Backbone, Marionette, $, _){
 	Entities.Contact = Backbone.Model.extend({
+		urlRoot: "contacts",
 		defaults:{
 			firstName:"",
 			lastName:"",
@@ -9,6 +10,7 @@ app.module("Entities",function(Entities, app, Backbone, Marionette, $, _){
 		}
 	});
 	Entities.ContactCollection = Backbone.Collection.extend({
+		url:"contacts",
 		model: Entities.Contact,
 		comparator: function(i){
 			return[i.get("lastName"),i.get("firstName")];
